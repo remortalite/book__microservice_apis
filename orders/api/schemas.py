@@ -1,7 +1,7 @@
 from datetime import datetime
 import enum
 import uuid
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, field_validator
 
 
 class CoffeeSize(enum.Enum):
@@ -21,7 +21,12 @@ class OrderStatus(enum.Enum):
 class OrderItemSchema(BaseModel):
     product: str
     size: CoffeeSize
-    quantity: int = Field(default=1, ge=1)
+    quantity: int | None = Field(default=1, ge=1)
+
+    @field_validator("quantity")
+    def quantity_not_sero(cls, value: int | None):
+        assert value != 0
+        return value
 
 
 class CreateOrderSchema(BaseModel):

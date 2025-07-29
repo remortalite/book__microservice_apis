@@ -4,6 +4,8 @@ import uuid
 from fastapi.responses import Response
 from fastapi import status, APIRouter
 
+from orders.api.schemas import CreateOrderSchema
+
 
 app = APIRouter()
 
@@ -25,7 +27,7 @@ def get_orders():
     return {'orders': [order]}
 
 @app.post('/orders', status_code=status.HTTP_201_CREATED)
-def create_order():
+def create_order(order_details: CreateOrderSchema):
     return order
 
 @app.get('/orders/{order_id}')
@@ -33,7 +35,7 @@ def get_order(order_id: uuid.UUID):
     return order
 
 @app.put('/orders/{order_id}')
-def update_order(order_id: uuid.UUID):
+def update_order(order_id: uuid.UUID, order_details: CreateOrderSchema):
     return order
 
 @app.delete('/orders/{order_id}', status_code=status.HTTP_204_NO_CONTENT)

@@ -146,6 +146,7 @@ components:
         - id
         - created 
         - status
+      additionalProperties: false
       properties:
         id:
           type: string

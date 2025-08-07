@@ -28,9 +28,15 @@ class OrderItemSchema(BaseModel):
         assert value != 0
         return value
 
+    class Config:
+        extra = 'forbid'
+
 
 class CreateOrderSchema(BaseModel):
     order: list[OrderItemSchema] = Field(..., min_length=1)
+    
+    class Config:
+        extra = 'forbid'
 
 
 class GetOrderSchema(CreateOrderSchema):

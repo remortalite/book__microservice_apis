@@ -5,11 +5,109 @@ info:
 servers:
   - url: https://api.server.test/v1
 paths:
-  /test:
+  /orders:
     get:
+      operationId: getOrders
+      parameters:
+        - name: cancelled
+          in: query
+          required: false
+          schema:
+            type: boolean
+        - name: limit
+          in: query
+          required: false
+          schema:
+            type: integer
       responses:
         '200':
-          description: OK
+          description: A JSON array of orders
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  orders:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/GetOrderSchema" 
+                required:
+                  - orders
+    post:
+      operationId: createOrder 
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateOrderSchema"
+      responses:
+        '200':
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GetOrderSchema"
+
+  /orders/{order_id}:
+    parameters:
+      - in: path
+        required: true
+        name: order_id
+        schema:
+          type: string
+          format: uuid
+    get:
+      operationId: getOrder
+      summary: Returns the detail of a specific order
+      responses:
+        '200':
+          description: 'OK'
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GetOrderSchema"
+        '404':
+          $ref: "#/components/responses/NotFound"
+    put: 
+      operationId: updateOrder
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateOrderSchema"
+      responses:
+        '200':
+          description: "Data succesfully updated"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GetOrderSchema"
+    delete:
+      operationId: deleteOrder
+      responses:
+        '200':
+          description: 'OK'
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GetOrderSchema"
+
+  /orders/{order_id}/pay:
+    post: 
+      operationId: payOrder
+      responses:
+        '200':
+          description: 'OK'
+
+  /orders/{order_id}/cancel:
+    post:
+      operationId: cancelOrder
+      responses:
+        "200":
+          description: "OK"
+
 components:
   schemas:
     OrderItemSchema:
@@ -67,3 +165,17 @@ components:
           type: array
           items:
             $ref: "#/components/schemas/OrderItemSchema"
+    Error:
+      type: object
+      properties:
+        detail:
+          type: string
+      required:
+        - detail
+  responses:
+    NotFound:
+      description: The specified resource was not found 
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"

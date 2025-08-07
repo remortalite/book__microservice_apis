@@ -4,6 +4,8 @@ info:
   version: '1.0'
 servers:
   - url: https://api.server.test/v1
+  - url: http://127.0.0.1:8123
+    description: URL for local development and testing
 paths:
   /orders:
     get:

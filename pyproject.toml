@@ -6,6 +6,7 @@ readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
     "fastapi>=0.116.1",
+    "flask-smorest>=0.46.1",
     "pyyaml>=6.0.2",
     "uvicorn>=0.35.0",
 ]
